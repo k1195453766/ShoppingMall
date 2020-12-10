@@ -32,6 +32,7 @@
 .page,
 body {
     background-color: var(--weui-BG-0);
+    background: white;
 }
 
 
@@ -42,7 +43,7 @@ body {
 }
 
 .tab0{
-    background: red;
+    
 }
 .tab1{
     background: goldenrod;

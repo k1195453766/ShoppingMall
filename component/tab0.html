@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+    <style>
+        h1 {
+            line-height: 60px;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-banner {
+            width: 90%;
+            height: 200px;
+            border-radius: 8px;
+            margin-left: 5%;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .notice {
+            width: 90%;
+            min-height: 40px;
+            margin-left: 5%;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            line-height: 40px;
+
+        }
+
+        .notice span {
+            color: black;
+            font-size: 16px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .shop-list {
+            width: 90%;
+            margin-left: 5%;
+            border-radius: 8px;
+        }
+
+        .shop-title {
+            width: 100%;
+            height: 40px;
+            background: #fef7ef;
+            overflow: hidden;
+            line-height: 40px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .left-shu {
+            width: 8px;
+            height: 30px;
+            margin-top: 5px;
+            background: orangered;
+            margin-right: 10px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .shop ul li {
+            width: 50%;
+            float: left;
+        }
+
+        .shop ul li img {
+            width: 100%;
+        }
+
+        .shop-item {
+            padding: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .weui-flex__item {
+            padding: 10px;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 100%;height: 100%">
+        <div class="swiper-banner">
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3073610133,2893006152&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=865093465,2150265796&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div class="notice">
+            <span>商城公告：请更新推广二维码</span>
+        </div>
+
+        <div class="shop-list">
+            <div class="shop-title">
+                <div class="left-shu"></div>
+                <span>商品列表</span>
+            </div>
+            <div class="shop">
+                <!-- <ul>
+                    <li>
+                        <a href="#">
+                            <div class="shop-item">
+                                <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                                    alt="" srcset="">
+                                <span>祯神水</span>
+                                <span></span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <div class="shop-item">
+                                <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3758616094,217032655&fm=26&gp=0.jpg"
+                                    alt="" srcset="">
+                                <span>祯神水</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul> -->
+                <div class="weui-flex">
+                    <div class="weui-flex__item">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                        <span>祯神水</span><br>
+                        <span>￥39</span>
+                    </div>
+                    <div class="weui-flex__item">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                        <span>祯神水</span><br>
+                        <span>￥47</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        direction: 'horizontal',
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        autoplay: {
+            delay: 4000,
+        },
+    })
+</script>
+
+
+</html>

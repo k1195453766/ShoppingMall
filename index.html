@@ -7,47 +7,35 @@
     <!-- 引入 WeUI CDN 链接 -->
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
     <link rel="stylesheet" href="./css/index.css">
-    <title>商城</title>
+    <title>首页</title>
 </head>
 
 <body>
-
-    <a href="javascript:;" class="weui-btn weui-btn_primary">绿色按钮</a>
-
     <div class="container" id="container">
         <div class="page tabbar js_show">
             <div class="page__bd" style="height: 100%;">
                 <div class="weui-tab">
                     <div class="weui-tab__panel">
-                        <div class="tab0" style="display: block;">首页</div>
-                        <div class="tab1" style="display: none;">资料库</div>
-                        <div class="tab2" style="display: none;">购物车</div>
-                        <div class="tab3" style="display: none;">个人中心</div>
+                        <div class="tab0" style="display: block;"></div>
+                        <div class="tab1" style="display: none;"></div>
+                        <div class="tab2" style="display: none;"></div>
+                        <div class="tab3" style="display: none;"></div>
                     </div>
                     <div class="weui-tabbar">
                         <div id="tab0" class="weui-tabbar__item weui-bar__item_on">
-                            <!-- <div style="display: inline-block; position: relative;">
-                                <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
-                                <span class="weui-badge" style="position: absolute; top: -2px; right: -13px;">8</span>
-                            </div> -->
-                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <img src="./images/tab/tab0_p.png" alt="" class="weui-tabbar__icon">
                             <p class="weui-tabbar__label">首页</p>
                         </div>
                         <div id="tab1" class="weui-tabbar__item">
-                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <img src="./images/tab/tab1.png" alt="" class="weui-tabbar__icon">
                             <p class="weui-tabbar__label">资料库</p>
                         </div>
                         <div id="tab2" class="weui-tabbar__item">
-                            <!-- <div style="display: inline-block; position: relative;">
-                                <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
-                                <span class="weui-badge weui-badge_dot"
-                                    style="position: absolute; top: 0; right: -6px;"></span>
-                            </div> -->
-                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <img src="./images/tab/tab2.png" alt="" class="weui-tabbar__icon">
                             <p class="weui-tabbar__label">购物车</p>
                         </div>
                         <div id="tab3" class="weui-tabbar__item">
-                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <img src="./images/tab/tab3.png" alt="" class="weui-tabbar__icon">
                             <p class="weui-tabbar__label">个人中心</p>
                         </div>
                     </div>
@@ -57,23 +45,89 @@
 
     </div>
 
+    <div class="weui-msg" style="display: none;height: 100%;">
+        <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+        <div class="weui-msg__text-area">
+            <h2 class="weui-msg__title">操作失败</h2>
+            <p class="weui-msg__desc">请在微信客户端打开</p>
+        </div>
+    </div>
+
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script type="text/javascript" src="./js/template.js"></script>
 <script type="text/javascript" class="tabbar js_show">
     $(function () {
+        if (!isWeiXin()) {
+            //document.write('请在微信客户端打开应用')
+            // $('.weui-msg').css('display', 'block').siblings().css('display', 'none')
+        }
+        // $(".tab0").load("./component/home.html")
+        // $('#tab0 img').attr('src', './images/tab/homeon.png')
+        // var currTab = 'tab0'
+        // $('.weui-tabbar__item').on('click', function () {
+        //     $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        //     var classTab = $(this).attr('id')
+
+        //     if (currTab == classTab) {
+        //         return;
+        //     } else {
+        //         $('.' + classTab).css('display', 'block').siblings().css('display', 'none')
+        //         if (classTab == 'tab0') {
+        //             $(".tab0").load("./component/home.html");
+        //             $('#tab0 img').attr('src', './images/tab/homeon.png')
+        //         }
+        //         if (classTab == 'tab3') {
+        //             $(".tab3").load("./component/my.html")
+        //             $('#tab3 img').attr('src', './images/tab/myon.png')
+        //             console.log($(this).siblings());
+        //         }
+        //         for (const index in $(this).siblings()) {
+
+        //         }   
+        //     }
+        //     currTab = classTab;
+        // });
+        $(".tab0").load("./component/tab0.html")
+        var currTab = 'tab0'
+        var title = ['首页', '资料库', '购物车', '个人中心'];
         $('.weui-tabbar__item').on('click', function () {
             $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-            var classTab = $(this).attr('id')
-            $('.' + classTab).css('display', 'block').siblings().css('display', 'none')
 
+            var classTab = $(this).attr('id')
+            if (currTab == classTab) {
+                return;
+            } else {
+                $('.' + classTab).css('display', 'block').siblings().css('display', 'none')
+            }
+
+            var curr = $(this).index();
+            $(document).attr('title', title[curr]);
+            $('.weui-tabbar__item').each(function (index, element) {
+                if (index == curr) {
+                    $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '_p.png');
+                    $('.tab' + index).load("./component/tab" + index + ".html")
+                } else {
+                    $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '.png');
+                }
+            });
+
+            currTab = classTab;
         });
 
 
-
-        $(".tab0").load("./component/home.html")
     });
 
-
+    // 判断是否微信打开
+    function isWeiXin() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 </script>
 
 </html>
