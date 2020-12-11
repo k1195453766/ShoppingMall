@@ -33,6 +33,8 @@
 body {
     background-color: var(--weui-BG-0);
     background: white;
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -46,11 +48,8 @@ body {
     
 }
 .tab1{
-    background: goldenrod;
 }
 .tab2{
-    background: green;
 }
 .tab3{
-    background: orange;
 }
