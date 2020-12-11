@@ -107,6 +107,27 @@
             padding: 10px;
             flex-direction: column;
         }
+
+        .shop-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .weui-flex_item {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            margin-top: 20px;
+        }
+
+        .weui-flex_item img {
+            margin-left: 5%;
+            width: 90%;
+        }
+
+        .weui-flex_item span {
+            margin-left: 5%;
+        }
     </style>
 </head>
 
@@ -167,20 +188,36 @@
                         </a>
                     </li>
                 </ul> -->
-                <div class="weui-flex">
-                    <div class="weui-flex__item">
+                <!-- <script type="text/html" id="tab0_shop">
+                    <div class="">
+                        <div class="weui-flex__item">
+                            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                                alt="" srcset="">
+                            <span>祯神水</span><br>
+                            <span>￥39</span>
+                        </div>
+                        <div class="weui-flex__item">
+                            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                                alt="" srcset="">
+                            <span>祯神水</span><br>
+                            <span>￥47</span>
+                        </div>
+                    </div>
+                </script> -->
+                <script type="text/javascript" src="./js/template.js"></script>
+                <div id="shoplist" class="shop-flex">
+                    <script type="text/html" id="tab0_shop">
+                    <!-- {{each shops as shop i}}
+                    <div class="weui-flex_item" id="{{shop.id}}">
                         <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
                             alt="" srcset="">
-                        <span>祯神水</span><br>
-                        <span>￥39</span>
+                        <span>{{shop.goodsName}}</span>
+                        <span>￥{{shop.price}}</span>
                     </div>
-                    <div class="weui-flex__item">
-                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
-                            alt="" srcset="">
-                        <span>祯神水</span><br>
-                        <span>￥47</span>
-                    </div>
+                    {{ /each }}
+                    </script> -->
                 </div>
+
             </div>
         </div>
     </div>
@@ -197,6 +234,27 @@
             delay: 4000,
         },
     })
+
+    // 获取首页数据
+    // $.ajax({
+    //     url: api.shopList,
+    //     type: 'POST',
+    //     dataType: 'json',
+    //     contentType: "application/json;charset=utf-8",//这个参数也是header参数
+    //     data: JSON.stringify({ "pages": 1, "size": 10 }),
+    //     success: function (data) {
+    //         console.log(111111);
+    //         console.log(data);
+    //         var shopList = {
+    //             shops: data.records
+    //         }
+    //         var html = template("tab0_shop", shopList);
+    //         $("#shoplist").html(html);
+    //     },
+    //     error: function (msg) {
+    //         console.log(msg);
+    //     }
+    // })
 </script>
 
 

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <!-- 引入 WeUI CDN 链接 -->
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
     <link rel="stylesheet" href="./css/index.css">
@@ -57,41 +58,18 @@
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
 <script type="text/javascript" src="./js/template.js"></script>
+<script src="./js/api.js"></script>
 <script type="text/javascript" class="tabbar js_show">
+    localStorage.setItem("wx_index", "1");
     $(function () {
         if (!isWeiXin()) {
             //document.write('请在微信客户端打开应用')
             // $('.weui-msg').css('display', 'block').siblings().css('display', 'none')
         }
-        // $(".tab0").load("./component/home.html")
-        // $('#tab0 img').attr('src', './images/tab/homeon.png')
-        // var currTab = 'tab0'
-        // $('.weui-tabbar__item').on('click', function () {
-        //     $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-        //     var classTab = $(this).attr('id')
-
-        //     if (currTab == classTab) {
-        //         return;
-        //     } else {
-        //         $('.' + classTab).css('display', 'block').siblings().css('display', 'none')
-        //         if (classTab == 'tab0') {
-        //             $(".tab0").load("./component/home.html");
-        //             $('#tab0 img').attr('src', './images/tab/homeon.png')
-        //         }
-        //         if (classTab == 'tab3') {
-        //             $(".tab3").load("./component/my.html")
-        //             $('#tab3 img').attr('src', './images/tab/myon.png')
-        //             console.log($(this).siblings());
-        //         }
-        //         for (const index in $(this).siblings()) {
-
-        //         }   
-        //     }
-        //     currTab = classTab;
-        // });
-
-        $(".tab0").load("./component/tab0.html")
-        var currTab = 'tab0'
+        // 获取网页地址参数
+        var param = window.location.search.substring(1).split('&')[0].split('=')[1];
+        init(param);
+        var currTab = param
         var title = ['首页', '资料库', '购物车', '个人中心'];
         $('.weui-tabbar__item').on('click', function () {
             $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
@@ -110,7 +88,7 @@
                     $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '_p.png');
                     $('.tab' + index).load("./component/tab" + index + ".html")
                     var url_p = window.location.origin + window.location.pathname + '?tab=tab' + index
-                    window.history.pushState(null,null,url_p)
+                    window.history.pushState(null, null, url_p)
                 } else {
                     $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '.png');
                 }
@@ -120,7 +98,62 @@
         });
 
 
+        let a = window.location.search.substring(1).split('&')[1];
+        console.log('code', a);
+        if (a == undefined) {
+            // 未获取到code
+        }
+
+        // 获取微信access_token
+        let wxIndex = localStorage.getItem("wx_index")
+        if (wxIndex == 1) {
+            get_wx_token_1()
+        } else {
+            get_wx_token_2()
+        }
     });
+
+    function get_wx_token_1() {
+        //const appid = 'wx0d97d89ec23acdf7'
+        // const redirect = encodeURIComponent('https://www.sidama.work/ShoppingMall?tab=tab0')
+        //const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect}&response_type=code&scope=snsapi_userinfo#wechat_redirect`
+
+        $.ajax({
+            url: 'http://interface.sidama.work/blog/getWxToken',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                let a = window.location.search.substring(1).split('&')[1];
+                console.log('code', a);
+                alert(a)
+            },
+            error: function (msg) {
+                console.log(msg);
+                let a = window.location.search.substring(1).split('&')[1];
+                console.log('code', a);
+                alert(a)
+            }
+        })
+    }
+
+    // 初始化页面
+    function init(param) {
+        $("." + param).load("./component/" + param + ".html")
+        $('#' + param).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        $('.' + param).css('display', 'block').siblings().css('display', 'none')
+        var i = param.substring(3)
+        $('.weui-tabbar__item').each(function (index, element) {
+            if (index == i) {
+                $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '_p.png');
+                $('.tab' + index).load("./component/tab" + index + ".html")
+                var url_p = window.location.origin + window.location.pathname + '?tab=tab' + index
+                window.history.pushState(null, null, url_p)
+            } else {
+                $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '.png');
+            }
+        });
+    }
 
     // 判断是否微信打开
     function isWeiXin() {
