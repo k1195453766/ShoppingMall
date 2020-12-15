@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+
+    <style>
+        .footer {
+            display: flex;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            height: 6rem;
+            background: #909090;
+            width: 100%;
+        }
+
+        div {
+            flex: 1;
+            font-size: 30px;
+        }
+
+        div img {
+            width: 30px;
+            height: 30px;
+        }
+
+        div p {
+            color: black;
+        }
+
+        .on {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="footer">
+            <div v-for='(item,index) of items' :class='[item.cls,{on:index === idx}]' @click="$router.push(item.push)">
+                <img :src="index===idx?item.iconSelect:item.icon">
+                <p :class="['colorChange',{on:index===idx}]">{{item.name}}</p>
+            </div>
+
+        </div>
+    </div>
+</body>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        props: ['idx'],
+        data: {
+            message: 'Hello Vue!',
+            items: [{
+                cls: "home",
+                name: "首页",
+                push: "/home",
+                icon: "./images/tab/tab0.png",
+                iconSelect: "./images/tab/tab0_p.png"
+            },
+            {
+                cls: "shares",
+                name: "股票",
+                push: "/shares",
+                icon: "./images/tab/tab1.png",
+                iconSelect: "./images/tab/tab1_p.png"
+            },
+            {
+                cla: "community",
+                name: "社区",
+                push: "/community",
+                icon: "./images/tab/tab2.png",
+                iconSelect: "./images/tab/tab2_p.png"
+            },
+            {
+                cla: "mine",
+                name: "我的",
+                push: "/mine",
+                icon: "./images/tab/tab3.png",
+                iconSelect: "./images/tab/tab3_p.png"
+            }]
+        }
+    })
+</script>
+
+
+</html>

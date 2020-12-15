@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css//shopDetails.css">
+    <title>详情</title>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <div class="header">
+            <div class="goBack"><a href="../home.html?tab=tab0"><img src="../images/home/back.png" alt=""></a></div>
+            商品详情
+        </div>
+        <div class="swiper-banner">
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3073610133,2893006152&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=865093465,2150265796&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                    </div>
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <strong class="shop_title"></strong>
+            <div class="shop_money">
+                <span>￥<span class="money"></span></span>
+                <span class="shop_sum"></span>
+            </div>
+        </div>
+        <div class="promise">
+            <span>品质承诺</span>
+            <span>七天包退换</span>
+            <span>如实描述</span>
+        </div>
+
+        <div class="comment">
+            <div class="weui-cells">
+                <div class="weui-cell weui-cell_active weui-cell_access">
+                    <div class="weui-cell__bd">用户评价</div>
+                    <div class="weui-cell__ft" style="font-size: 0;">
+                        <span style="vertical-align: middle; font-size: 17px;">100%好评</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop_img">
+            <div class="shop_img_title"><strong>图文详情</strong></div>
+            <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                alt="" srcset="">
+            <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                alt="" srcset="">
+            <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                alt="" srcset="">
+            <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                alt="" srcset="">
+        </div>
+
+        <div class="footer">
+            <div class="footer_left">
+                <img src="../images/home/cat.png" alt="" sizes="" srcset="">
+            </div>
+            <div class="footer_center">加入购物车</div>
+            <div class="footer_right">立刻购买</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- <script src="https://unpkg.com/swiper/swiper-bundle.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+<script src="../js/api.js"></script>
+<script>
+    $(function () {
+        initData()
+        initSwiper()
+    })
+
+    // 轮播图
+    function initSwiper() {
+        var mySwiper1 = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            autoplay: {
+                delay: 4000,
+            },
+        })
+
+    }
+    // 详情接口
+    function initData() {
+        var shopId = window.location.search.split('?')[1].split('=')[1];
+        $.ajax({
+            url: api.shopDetails + shopId,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log('shopDetails');
+                console.log(data);
+                $('.shop_title').text(data.goodsName)
+                $('.money').text(data.price)
+                $('.shop_sum').text('销量：1047')
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    $('.footer_left').click(function () {
+        window.location.href = '../home.html?tab=tab2'
+    })
+
+    // 添加购物车
+    $('.footer_center').click(function () {
+
+    })
+
+    // 点击立刻购买
+    $('.footer_right').click(function () {
+        window.location.href = './order.html'
+    })
+</script>
+
+</html>
