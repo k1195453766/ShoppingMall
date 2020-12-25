@@ -1,0 +1,103 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/wallet.css">
+    <title>钱包</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>钱包</strong>
+        </div>
+
+        <div id="app">
+            <div class="wallet_banner">
+                <div class="balance">
+                    <span>可用余额</span>
+                    <span>￥<span class="money">{{balance}}</span>元</span>
+                </div>
+                <div class="balance_view">
+                    <div @click="recharge" class="recharge">
+                        <div class="recharge_view">
+                            <span>账户充值</span>
+                        </div>
+                    </div>
+                    <div @click="withdrawal" class="withdrawal">
+                        <div class="withdrawal_view">
+                            <span>余额提现</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-cells">
+                <a class="weui-cell  weui-cell_access" href="./walletRecord.html?type=1">
+                    <div class="weui-cell__bd">
+                        <p>账户明细</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                    </div>
+                </a>
+                <a class="weui-cell  weui-cell_access" href="./walletRecord.html?type=2">
+                    <div class="weui-cell__bd">
+                        <p>提现记录</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                    </div>
+                </a>
+                <a class="weui-cell  weui-cell_access" href="./walletRecord.html?type=3">
+                    <div class="weui-cell__bd">
+                        <p>发放记录</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                    </div>
+                </a>
+                <a class="weui-cell  weui-cell_access" href="./walletRecord.html?type=4">
+                    <div class="weui-cell__bd">
+                        <p>充值记录</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript" src="../js/weui.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            balance: 0
+        },
+        created() {
+        },
+        methods: {
+            cancle() {
+                window.history.back(-1)
+            },
+            // 充值
+            recharge() {
+
+            },
+            // 提现
+            withdrawal() {
+
+            }
+        }
+    })
+</script>
+
+</html>

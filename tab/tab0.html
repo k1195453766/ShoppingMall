@@ -139,16 +139,13 @@
                 <div class="swiper-wrapper">
                     <!-- Slides -->
                     <div class="swiper-slide">
-                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3073610133,2893006152&fm=26&gp=0.jpg"
-                            alt="" srcset="">
+                        <img src="https://www.sidama.work/shop/images/home/lunbo/1.jpg" alt="" srcset="">
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
-                            alt="" srcset="">
+                        <img src="https://www.sidama.work/shop/images/home/lunbo/2.jpg" alt="" srcset="">
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=865093465,2150265796&fm=26&gp=0.jpg"
-                            alt="" srcset="">
+                        <img src="https://www.sidama.work/shop/images/home/lunbo/3.jpg" alt="" srcset="">
                     </div>
                 </div>
                 <!-- If we need pagination -->
@@ -166,8 +163,8 @@
                 <span>商品列表</span>
             </div>
             <div class="shop">
-                <!-- <ul>
-                    <li>
+                <ul>
+                    <!-- <li>
                         <a href="./src/shopDetails.html">
                             <div class="shop-item">
                                 <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
@@ -186,14 +183,14 @@
                                 <span>祯神水</span>
                             </div>
                         </a>
-                    </li>
-                </ul> -->
-                <script type="text/javascript" src="./js/template.js"></script>
+                    </li> -->
+                </ul>
+                <!-- <script type="text/javascript" src="./js/template.js"></script> -->
                 <div id="shoplist" class="shop-flex">
                     <script type="text/html" id="tab0_shop">
                     {{each shops as shop i}}
                     <div onclick="gotoDetails({{shop.id}})" class="weui-flex_item" id="{{shop.id}}">
-                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3192481053,1467100590&fm=26&gp=0.jpg"
+                        <img src="{{shop.imgPath}}"
                             alt="" srcset="">
                         <span>{{shop.goodsName}}</span>
                         <span>￥{{shop.price}}</span>
@@ -237,8 +234,6 @@
             contentType: "application/json;charset=utf-8",//这个参数也是header参数
             data: JSON.stringify({ "pages": 1, "size": 10 }),
             success: function (data) {
-                console.log(111111);
-                console.log(data);
                 var shopList = {
                     shops: data.records
                 }
@@ -253,7 +248,7 @@
 
     // 跳转详情页面
     function gotoDetails(id) {
-        window.location.href = './src/shopDetails.html?id=' + id
+        window.location.href = './src/shopDetails.html?id=' + id + '&text=' + token
     }
 </script>
 

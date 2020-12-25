@@ -1,0 +1,148 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+
+    <link rel="stylesheet" href="../css/public.css">
+
+    <title>个人身份信息</title>
+    <style>
+        .weui-form__opr-area {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>个人身份信息</strong>
+        </div>
+
+        <div id="app">
+            <div class="weui-cell weui-cell_active weui-cell_readonly">
+                <div class="weui-cell__hd"><label class="weui-label">账号:</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" :value="account" readonly />
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_active weui-cell_readonly">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>真实姓名:</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" v-model="username" placeholder="请输入真实姓名" value="__momo" />
+                </div>
+            </div>
+
+
+            <div class="weui-cell weui-cell_active weui-cell_readonly">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>身份证号:</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" v-model="user_code" placeholder="请输入身份证号" />
+                </div>
+            </div>
+            <!-- <div class="weui-cell weui-cell_active" id="js_cell">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>密码:</label></div>
+                <div class="weui-cell__bd weui-flex">
+                    <input id="js_input" class="weui-input" autofocus type="text" placeholder="请输入密码" />
+                    <button id="js_input_clear" class="weui-btn_reset weui-btn_icon weui-btn_input-clear">
+                        <i class="weui-icon-clear"></i>
+                    </button>
+                </div>
+            </div> -->
+
+            <div class="weui-form__opr-area">
+                <a @click="makeSure" class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips">确定</a>
+            </div>
+
+            <div class="weui-form__opr-area">
+                <a @click="cancle" href="javascript:" class="weui-btn weui-btn_warn">取消</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript" src="../js/weui.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            account: '',
+            username: '',
+            user_code: '',
+            token: localStorage.getItem('token')
+        },
+        created() {
+            var userInfo = userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            this.account = userInfo.userId
+            this.getPersonalInfo();
+        },
+        methods: {
+            // 查询个人信息
+            getPersonalInfo() {
+                that = this;
+                $.ajax({
+                    url: api.personalInfo,
+                    type: 'get',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log('personalInfo', data);
+                        if (data.code == 200) {
+                            that.account = data.data.id
+                            that.username = data.data.realName == null ? '' : data.data.realName
+                            that.user_code = data.data.idCard == null ? '' : data.data.idCard
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+            makeSure() {
+                that = this;
+                $.ajax({
+                    url: api.savePersonalInfo,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({ "id": this.account, "idCard": this.user_code, "realName": this.username }),
+                    success: function (data) {
+                        console.log('savePersonalInfo', data);
+                        if (data.code == 200) {
+                            that.getPersonalInfo()
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+            cancle() {
+                window.history.back(-1)
+            }
+
+
+        }
+    })
+</script>
+
+</html>

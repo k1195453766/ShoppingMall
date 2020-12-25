@@ -1,0 +1,252 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+
+    <title>收货地址</title>
+    <style>
+        #app {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .addAddress {
+            width: 80%;
+            height: 50px;
+            margin-left: 10%;
+            background: #956bff;
+            border-radius: 5px;
+            position: fixed;
+            bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .address_list {
+            width: 100%;
+        }
+
+        .address_item {
+            width: 100%;
+            margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+            height: 120px;
+            background: white;
+        }
+
+        .default_title {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.5px solid lightgray;
+        }
+
+        .default_title img {
+            width: 26px;
+            height: 26px;
+            margin-right: 10px;
+        }
+
+        .default_title span {
+            margin-left: 10px;
+            font-size: 18px;
+        }
+
+        .address {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .address span {
+            margin-left: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .address_checkbox {
+            height: 40px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            display: flex;
+            position: unset;
+            margin-left: -35px;
+            height: 38px;
+        }
+
+        input[type=radio] {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>收货地址</strong>
+        </div>
+
+        <div id="app">
+            <div class="noAddress" v-if="addressList.length==0"></div>
+            <div v-else class="address_list">
+                <div class="address_item" v-for="(address,i) in addressList">
+                    <div class="default_title">
+                        <div class="address_checkbox"
+                            @click="change_address(address.id,address.receiveName,address.receivePhone,address.addrInfo)">
+                            <input type="radio" v-if="address.isDefault==1" checked>
+                            <input type="radio" v-else>默认地址
+                        </div>
+                        <img @click="addressDelete(address.id)" src="../images/del.png" alt="" srcset="">
+                    </div>
+                    <div class="address">
+                        <span>{{address.receiveName}}&nbsp;&nbsp;&nbsp;&nbsp; {{address.receivePhone}}</span>
+                        <span>{{address.addrInfo}}</span>
+                    </div>
+                </div>
+
+                <!-- <div class="address_item">
+                    <div class="default_title">
+                        <span><input type="radio" value="2">默认地址</span>
+                        <img src="../images/del.png" alt="" srcset="">
+                    </div>
+                    <div class="address">
+                        <span>姓名&nbsp;&nbsp;&nbsp;&nbsp; 手机号</span>
+                        <span>山东省济南市历下区创展中心阳光中心</span>
+                    </div>
+                </div> -->
+
+            </div>
+
+
+            <div @click="addAddress" class="addAddress">
+                新增收获地址
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    console.log(this);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            addressList: [],
+            token: localStorage.getItem('token')
+        },
+        created() {
+            var token = localStorage.getItem('token')
+            this.getAddress(token)
+        },
+        methods: {
+            getAddress() {
+                that = this;
+                $.ajax({
+                    url: api.addressList,
+                    type: 'get',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            that.addressList = data.data;
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            // 设为默认地址
+            change_address(id, name, phone, address) {
+                that = this;
+                $.ajax({
+                    url: api.updateAddress,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({ "addressId": 1, "id": id, "addrInfo": address, "receivePhone": phone, "receiveName": name, "isDefault": 1, "postCode": '250000' }),
+                    success: function (data) {
+                        console.log(data);
+                        if (data.code == 200) {
+                            that.getAddress()
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+            // 跳转新增地址
+            addAddress() {
+                window.location.href = './addAddress.html'
+            },
+
+            // 删除地址
+            addressDelete(id) {
+                console.log('addressDelete', id);
+                that = this;
+                $.ajax({
+                    url: api.addressDelete + "?ids=" + id,
+                    type: 'get',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log('addressDelete', data);
+                        if (data.code == 200) {
+                            that.getAddress()
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            }
+
+
+        }
+    })
+</script>
+
+</html>

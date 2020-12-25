@@ -3,18 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
-    <link rel="stylesheet" href="../css//shopDetails.css">
+    <link rel="stylesheet" href="../css/shopDetails.css">
     <title>详情</title>
 </head>
 
 <body>
     <div id="app" class="container">
         <div class="header">
-            <div class="goBack"><a href="../home.html?tab=tab0"><img src="../images/home/back.png" alt=""></a></div>
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
             商品详情
         </div>
         <div class="swiper-banner">
@@ -23,17 +24,16 @@
                 <div class="swiper-wrapper">
                     <!-- Slides -->
                     <div class="swiper-slide">
-                        <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3073610133,2893006152&fm=26&gp=0.jpg"
-                            alt="" srcset="">
+                        <img src="" alt="" srcset="">
                     </div>
-                    <div class="swiper-slide">
+                    <!-- <div class="swiper-slide">
                         <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
                             alt="" srcset="">
                     </div>
                     <div class="swiper-slide">
                         <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=865093465,2150265796&fm=26&gp=0.jpg"
                             alt="" srcset="">
-                    </div>
+                    </div> -->
                 </div>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>
@@ -43,7 +43,7 @@
         <div class="content">
             <strong class="shop_title"></strong>
             <div class="shop_money">
-                <span>￥<span class="money"></span></span>
+                <span>¥<span class="money"></span></span>
                 <span class="shop_sum"></span>
             </div>
         </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="shop_img">
+        <!-- <div class="shop_img">
             <div class="shop_img_title"><strong>图文详情</strong></div>
             <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
                 alt="" srcset="">
@@ -74,6 +74,10 @@
                 alt="" srcset="">
             <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
                 alt="" srcset="">
+        </div> -->
+
+        <div class="page__bd page__bd_spacing">
+            <a href="javascript:" class="weui-btn weui-btn_default" id="showTextToast"></a>
         </div>
 
         <div class="footer">
@@ -81,7 +85,54 @@
                 <img src="../images/home/cat.png" alt="" sizes="" srcset="">
             </div>
             <div class="footer_center">加入购物车</div>
-            <div class="footer_right">立刻购买</div>
+            <div id="showIOSDialog1" class="footer_right">立刻购买</div>
+        </div>
+
+        <div id="dialogs">
+            <div class="js_dialog" id="iosDialog1" style="display: none;">
+                <div class="weui-mask"></div>
+                <div id="js_dialog_1" class="weui-half-screen-dialog">
+                    <!-- <div class="weui-half-screen-dialog__hd">
+                        <div class="weui-half-screen-dialog__hd__side">
+                            <button id="cancle_dialog" class="weui-icon-btn">关闭<i
+                                    class="weui-icon-close-thin"></i></button>
+                        </div>
+                        <div class="weui-half-screen-dialog__hd__main">
+                            <strong class="weui-half-screen-dialog__title">标题</strong>
+                        </div>
+                    </div> -->
+                    <div class="weui-half-screen-dialog__bd">
+                        <div class="module_view">
+                            <div class="module_view_shop">
+                                <div class="module_shop_img">
+                                    <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2869697147,1946968659&fm=26&gp=0.jpg"
+                                        alt="" srcset="">
+                                </div>
+                                <div class="module_shop_title">
+                                    <span>￥198</span>
+                                    <span>商品编号234</span>
+                                </div>
+                            </div>
+
+                            <div class="module_shop_type">
+
+                            </div>
+                            <div class="module_shop_num">
+                                <span>数量</span>
+                                <div class="module_shop_numbre">
+                                    <input onclick="num_reduce()" type="button" value="­­-">
+                                    <span class="curr_num">1</span>
+                                    <input onclick="num_plus()" type="button" value="＋">
+                                </div>
+                            </div>
+
+                            <div onclick="clickButton()" class="module_buttom">
+                                <span>立刻购买</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -91,6 +142,10 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
 <script src="../js/api.js"></script>
 <script>
+    var shopId = '';
+    var token = '';
+    var num = 1;
+    var $dialog1 = $('#js_dialog_1'), $iosDialog1 = $('#iosDialog1')
     $(function () {
         initData()
         initSwiper()
@@ -100,10 +155,10 @@
     function initSwiper() {
         var mySwiper1 = new Swiper('.swiper-container', {
             direction: 'horizontal',
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-            },
+            loop: false,
+            // pagination: {
+            //     el: '.swiper-pagination',
+            // },
             autoplay: {
                 delay: 4000,
             },
@@ -112,10 +167,14 @@
     }
     // 详情接口
     function initData() {
-        var shopId = window.location.search.split('?')[1].split('=')[1];
+        shopId = window.location.search.substring(1).split('&')[0].split('=')[1];
+        token = window.location.search.substring(1).split('&')[1].split('=')[1];
         $.ajax({
             url: api.shopDetails + shopId,
             type: 'GET',
+            headers: {
+                'Authorization': token
+            },
             dataType: 'json',
             success: function (data) {
                 console.log('shopDetails');
@@ -123,6 +182,7 @@
                 $('.shop_title').text(data.goodsName)
                 $('.money').text(data.price)
                 $('.shop_sum').text('销量：1047')
+                $('.swiper-slide img').attr('src', data.attchments[0].path)
             },
             error: function (msg) {
                 console.log(msg);
@@ -130,18 +190,138 @@
         })
     }
 
+    // 购买数量减
+    function num_reduce() {
+        var num = $('.curr_num').text();
+        if (num <= 1) { return }
+        else {
+            $('.curr_num').text(parseInt(num) - 1);
+        }
+    }
+
+    // 购买数量加
+    function num_plus() {
+        var num = $('.curr_num').text();
+        $('.curr_num').text(parseInt(num) + 1);
+    }
+
+    // 点击module中的购买/加入购物车
+    function clickButton() {
+        var typeName = $('.module_buttom span').text()
+        if (typeName == '加入购物车') {
+            addCart()
+        } else if (typeName == '立刻购买') {
+            buyShop()
+        }
+    }
+
+    // 加入购物车
+    function addCart() {
+        var shopName = $('.shop_title').text(),
+            num = $('.curr_num').text(),
+            price = $('.money').text(),
+            a_price = parseInt(num) * parseFloat(price)
+
+        $.ajax({
+            url: api.addGoodsCart,
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'Authorization': token
+            },
+            contentType: "application/json",//这个参数也是header参数
+            data: JSON.stringify({ "goodsId": shopId, "goodsName": shopName, "num": parseInt(num), "price": a_price }),
+            success: function (data) {
+                if (data.code == 200) {
+                    showToast('添加购物车成功')
+                    cancelModule();
+                } else {
+                    showToast(data.msg)
+                }
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    function buyShop() {
+        if (typeof WeixinJSBridge == "undefined") {
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d97d89ec23acdf7&redirect_uri=xxx&response_type=code&scope=snsapi_base&state=hyxt#wechat_redirect';
+        } else {
+            goPay();
+        }
+    }
+
+    function goPay() {
+        // 十位时间戳
+        var curr_time = Date.parse(new Date()).toString();
+        curr_time = curr_time.substr(0, 10);
+
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+            "appId": "wx0d97d89ec23acdf7",     //公众号名称，由商户传入     
+            "timeStamp": curr_time,         //时间戳，自1970年以来的秒数     
+            "nonceStr": "e61463f8efa94090b1f366cccfbbb444", //随机串     
+            "package": "prepay_id=u802345jgfjsdfgsdg888",
+            "signType": "MD5",         //微信签名方式：     
+            "paySign": "88288D7A91A4BE4F02FB1A55E783A89A" //微信签名
+        },
+            function (res) {
+                console.log('pay_callback', res);
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    console.log(res);
+                    // 使用以上方式判断前端返回,微信团队郑重提示：
+                    //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                } else {
+                    console.log();
+                }
+            });
+    }
+
+    // 展示提示信息
+    function showToast(title) {
+        var $textToast = $('#showTextToast').text(title);
+        $textToast.fadeIn();
+        setTimeout(function () {
+            $textToast.fadeOut();
+        }, 2000);
+    }
+
     $('.footer_left').click(function () {
-        window.location.href = '../home.html?tab=tab2'
+        window.location.href = '../index.html?text=' + token + '&tab=tab2'
     })
 
-    // 添加购物车
+
+    function cancelModule() {
+        $('.weui-mask').parents('.js_dialog').fadeOut(200);
+        $dialog1.removeClass('weui-half-screen-dialog_show');
+    }
+
+    // 取消module界面
+    $('#dialogs').on('click', '.weui-mask', function () {
+        $(this).parents('.js_dialog').fadeOut(200);
+        $dialog1.removeClass('weui-half-screen-dialog_show');
+        //$dialog2.removeClass('weui-half-screen-dialog_show');
+    });
+
+    $('#cancle_dialog').click(function () {
+        $(this).parents('.js_dialog').fadeOut(200);
+        $dialog1.removeClass('weui-half-screen-dialog_show');
+    })
+
+    // 打开购物车module
     $('.footer_center').click(function () {
-
+        $('.module_buttom span').text('加入购物车')
+        $iosDialog1.fadeIn(200);
+        $dialog1.addClass('weui-half-screen-dialog_show');
     })
 
-    // 点击立刻购买
+    // 点击立刻购买module
     $('.footer_right').click(function () {
-        window.location.href = './order.html'
+        $('.module_buttom span').text('立刻购买')
+        $iosDialog1.fadeIn(200);
+        $dialog1.addClass('weui-half-screen-dialog_show');
     })
 </script>
 

@@ -1,0 +1,173 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+
+    <title>新增地址</title>
+    <style>
+        #app {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .weui-form__control-area {
+            margin-top: -10px;
+        }
+
+        .weui-cells__group_form .weui-cell__hd {
+            padding-right: 0;
+        }
+
+        .weui-cells__group_form .weui-label {
+            margin-right: 0;
+            max-width: none
+        }
+
+        .weui-label {
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>新增地址</strong>
+        </div>
+
+        <div id="app">
+            <div class="weui-form">
+                <div class="weui-form__control-area">
+                    <div class="weui-cells__group weui-cells__group_form">
+                        <div class="weui-cells weui-cells_form">
+                            <div class="weui-cell weui-cell_active">
+                                <div class="weui-cell__hd"><label class="weui-label">收货人姓名：</label></div>
+                                <div class="weui-cell__bd">
+                                    <input class="input_name" class="weui-input" v-model="username"
+                                        placeholder="填写收货人姓名" />
+                                </div>
+                            </div>
+                            <div class="weui-cell weui-cell_active">
+                                <div class="weui-cell__hd"><label class="weui-label">联系电话：</label></div>
+                                <div class="weui-cell__bd">
+                                    <input class="input_phone" class="weui-input" v-model="phone"
+                                        placeholder="填写收货人联系电话" type="number" pattern="[0-9]*" />
+                                </div>
+                            </div>
+
+                            <div class="weui-cell weui-cell_active">
+                                <div class="weui-cell__hd"><label class="weui-label">详细地址:</label></div>
+                                <div class="weui-cell__bd">
+                                    <!-- <input id="js_input" class="weui-input" placeholder="填写收货的详细地址" /> -->
+                                </div>
+
+                            </div>
+                            <div class="weui-form__control-area">
+                                <div class="weui-cells__group weui-cells__group_form">
+                                    <div class="weui-cells weui-cells_form">
+                                        <div class="weui-cell ">
+                                            <div class="weui-cell__bd">
+                                                <textarea class="weui-textarea input_address" v-model="address"
+                                                    placeholder="请输入您的详细收获地址" rows="3"></textarea>
+                                                <!-- <div class="weui-textarea-counter"><span>0</span>/200</div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weui-form__opr-area">
+                    <a @click="showTooltips" class="weui-btn weui-btn_primary weui-btn_disabled" href="javascript:"
+                        id="showTooltips">新增地址</a>
+                </div>
+
+
+                <div id="js_toast" style="display: none;">
+                    <div class="weui-mask_transparent"></div>
+                    <div class="weui-toast">
+                        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                        <p class="weui-toast__content">新增地址成功</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            username: '',
+            phone: '',
+            address: '',
+            token: localStorage.getItem('token')
+        },
+        created() {
+            //this.getAddress()
+            console.log(this);
+        },
+        methods: {
+            // 新增地址
+            showTooltips() {
+                if (this.username.trim() == '') {
+                    this.showToast('请输入收货人姓名')
+                    return;
+                }
+                if (this.phone.trim() == '') {
+                    this.showToast('请输入收货人联系方式')
+                    return;
+                }
+                if (this.address.trim() == '') {
+                    this.showToast('请输入收货人详细地址')
+                    return;
+                }
+                that = this;
+                $.ajax({
+                    url: api.addAddress,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({ "addressId": 1, "addrInfo": this.address, "receivePhone": this.phone, "receiveName": this.username, "isDefault": 1, "postCode": '250000' }),
+                    success: function (data) {
+                        that.showToast('新增地址成功')
+                        window.history.back(-1)
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+            // 展示提示信息
+            showToast(title) {
+                var $textToast = $('#js_toast').text(title);
+                $textToast.fadeIn();
+                setTimeout(function () {
+                    $textToast.fadeOut();
+                }, 2000);
+            }
+
+        }
+    })
+</script>
+
+</html>

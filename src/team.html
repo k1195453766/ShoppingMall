@@ -1,0 +1,192 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../css/public.css">
+    <style>
+        .team_list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team_item {
+            width: 100%;
+            height: 60px;
+            background: white;
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .team_item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            margin-right: 10px;
+        }
+
+        .team_title {
+            width: 100%;
+            height: 40px;
+            background: goldenrod;
+            font-size: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+    <title>我的团队</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>我的团队</strong>
+        </div>
+
+        <div id="app">
+            <div v-if="teams.length==0"></div>
+            <div class="team_list" v-else>
+                <div class="team" v-for="(team, i) in teams" :key="i">
+                    <div v-if="team.level==0">
+                        <div v-if="team.count==0" class="noAgent"></div>
+                        <div v-else class="agent">
+                            <div class="team_title">
+                                一级代理({{team.count}})
+                            </div>
+                            <div class="team_item" v-for="(user,index) in team.userInfo">
+                                <img :src=user.headImgUrl alt="" srcset="">
+                                <span>{{user.nickName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else-if="team.level==1" class="agent">
+                        <div v-if="team.count==0" class="noAgent"></div>
+                        <div v-else class="agent">
+                            <div class="team_title">
+                                二级代理({{team.count}})
+                            </div>
+                            <div class="team_item" v-for="(user,index) in team.userInfo">
+                                <img :src=user.headImgUrl alt="" srcset="">
+                                <span>{{user.nickName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else-if="team.level==2" class="agent">
+                        <div v-if="team.count==0" class="noAgent"></div>
+                        <div v-else class="agent">
+                            <div class="team_title">
+                                三级代理({{team.count}})
+                            </div>
+                            <div class="team_item" v-for="(user,index) in team.userInfo">
+                                <img :src=user.headImgUrl alt="" srcset="">
+                                <span>{{user.nickName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <!-- <div class="team">
+                    <div class="team_title">
+                        一级代理
+                    </div>
+                    <div class="team_item">
+                        <img src="https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                        <span>team2</span>
+                    </div>
+                </div>
+
+                <div class="team">
+                    <div class="team_title">
+                        二级代理
+                    </div>
+                    <div class="team_item">
+                        <img src="https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                        <span>team2</span>
+                    </div>
+                </div>
+
+                <div class="team">
+                    <div class="team_title">
+                        三级代理
+                    </div>
+                    <div class="team_item">
+                        <img src="https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg"
+                            alt="" srcset="">
+                        <span>team2</span>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        name: '我的团队',
+        data: {
+            teams: []
+        },
+        created() {
+            var token = localStorage.getItem('token');
+            this.getMyTeam(token)
+        },
+        methods: {
+            getMyTeam(token) {
+                that = this
+                $.ajax({
+                    url: api.team + "?current=1&size=10",
+                    type: 'post',
+                    headers: {
+                        'Authorization': token
+                    },
+                    body: {
+                        "current": 1,
+                        "size": 10
+                    },
+                    dataType: 'json',
+                    success(data) {
+                        console.log('team', data);
+                        if (data.code == 200 && data.data.length > 0) {
+                            that.teams = data.data
+                        } else {
+                            //showToast(data.msg)
+                        }
+                    },
+                    error(msg) {
+                        console.log(msg);
+                    }
+                })
+
+
+                this.teams = [
+                    { id: 1, name: 'xiaosong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' },
+                    { id: 2, name: 'xiaohong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' }
+                ]
+            }
+        }
+    })
+</script>
+
+
+
+</html>

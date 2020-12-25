@@ -4,19 +4,288 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        .container_tab2 {
+            width: 100%;
+            background: #f6f6f6;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 50px;
+        }
 
+        .goods_list {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            flex-direction: row;
+            background: white;
+            margin-top: 5px;
+            position: relative;
+        }
+
+        .goods_select {
+            width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .goods_item {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .goods_img {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .goods_img img {
+            width: 100%;
+        }
+
+        .goods_info {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .goods_info_item {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding-left: 10px;
+        }
+
+        .goods_info_item p:first-child {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .goods_info_item strong:last-child {
+            color: #AA0000;
+            font-size: 17px;
+        }
+
+        .goods_info_item span {
+            color: gray;
+            font-size: 12px;
+        }
+
+        .goods_list .del {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .footer_view {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 40px;
+            position: fixed;
+            bottom: 56px;
+
+        }
+
+        .footer_view_bottom {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            background: white;
+        }
+
+        .footer_view_bottom span {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .footer_view_bottom .footer_money {
+            color: #AA0000;
+        }
+
+        .settlement {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #AA0000;
+        }
+
+        .settlement span {
+            color: white;
+            font-size: 18px;
+        }
     </style>
 </head>
 
 <body>
-    <div style="width: 100%;height: 100%;">
+    <div class="container_tab2" id="cartList">
+        <script type="text/html" id="tab2_cart">
+        {{each carts as cart i}}
+        <div class="goods_list">
+            <div class="goods_select">
+                <input onclick="onPressCheck({{cart.id}},{{cart.price}})" type="checkbox" name="goods" id="{{cart.id}}">
+            </div>
+            <div class="goods_item">
+                <div class="goods_img">
+                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3658703486,1855295477&fm=26&gp=0.jpg"
+                        alt="" srcset="">
+                </div>
+                <div class="goods_info">
+                    <div class="goods_info_item">
+                        <p>{{cart.goodsName}}</p>
+                        <span>备注:一瓶</span>
+                        <strong>￥{{cart.price}} <span>&nbsp;&nbsp;&nbsp;数量：{{cart.num}}</span></strong>
+                    </div>
+                </div>
+            </div>
+            <img onclick="delGoods({{cart.id}})" name="{{cart.id}}" class="del" src="./images/del.png" alt="" srcset="">
 
+        </div>
+        {{ /each }}
+        </script>
+
+        <!-- <div class="goods_list">
+            <div class="goods_select">
+                <input type="checkbox" name="goods">
+            </div>
+            <div class="goods_item">
+                <div class="goods_img">
+                    <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3658703486,1855295477&fm=26&gp=0.jpg"
+                        alt="" srcset="">
+                </div>
+                <div class="goods_info">
+                    <div class="goods_info_item">
+                        <p>祯神水</p>
+                        <span>备注:一瓶</span>
+                        <strong>￥198*1 <span>&nbsp;&nbsp;&nbsp;数量：1</span></strong>
+                    </div>
+                </div>
+            </div>
+            <img onclick="delGoods()" class="del" src="./images/del.png" alt="" srcset="">
+        </div> -->
+
+
+        <div class="page__bd page__bd_spacing">
+            <a href="javascript:" class="weui-btn weui-btn_default" id="showTextToast"></a>
+        </div>
     </div>
 
+    <div class="footer_view">
+        <div class="footer_view_bottom">
+            <span>合计金额: <span class="footer_money">0.00</span></span>
+        </div>
+        <div class="footer_view_bottom">
+            <div onclick="settlement()" class="settlement">
+                <span>立刻结算</span>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
 <script>
-    //alert('1234555677')
+    var token = '';
+    var list = [];
+    var totle = 0;
+    $(function () {
+        // 获取购物车列表
+        initCart()
+    })
+
+    function initCart() {
+        token = window.location.search.substring(1).split('&')[0].split('=')[1]
+        $.ajax({
+            url: 'https://www.sidama.work/cart/page',
+            type: 'POST',
+            headers: {
+                'Authorization': token
+            },
+            dataType: 'json',
+            contentType: "application/json;charset=utf-8",//这个参数也是header参数
+            data: JSON.stringify({ "pages": 1, "size": 10 }),
+            success: function (data) {
+                var cartList = {
+                    carts: data.records
+                }
+                var html = template("tab2_cart", cartList);
+                $("#cartList").html(html);
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    // 删除购物车商品
+    function delGoods(deleteId) {
+        good_id = $('.del').attr("name")
+        $.ajax({
+            url: api.goodsCartDel + '?ids=' + good_id,
+            type: 'get',
+            headers: {
+                'Authorization': token
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.code == 200) {
+                    showToast('删除成功!')
+                    initCart()
+                } else {
+                    showToast(data.msg)
+                }
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    // 点击checkbox
+    function onPressCheck(id, price) {
+        if (list.indexOf(id) == -1) {
+            // 不存在
+            totle = totle + parseFloat(price)
+            list.push(id)
+        } else {
+            totle = totle - parseFloat(price)
+            i = list.indexOf(id);
+            list.splice(i, 1)
+        }
+
+        $('.footer_money').text(totle)
+    }
+
+    // 点击立刻结算
+    function settlement() {
+        console.log('settlement');
+        var money = $('.footer_money').text();
+        console.log('money', money);
+        if (parseFloat(money) == 0) {
+            return;
+        }
+
+        window.location.href = "./src/order.html";
+    }
+
+    // 展示提示信息
+    function showToast(title) {
+        var $textToast = $('#showTextToast').text(title);
+        $textToast.fadeIn();
+        setTimeout(function () {
+            $textToast.fadeOut();
+        }, 2000);
+    }
 </script>
 
 

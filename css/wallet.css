@@ -1,0 +1,64 @@
+.header{
+    background: #1cbc80;
+}
+.header strong{
+    color:white;
+}
+
+.wallet_banner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 300px;
+    background: #1cbc80;
+}
+.balance{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.balance_view{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 20%;
+    border-top: 1px solid white;
+}
+.balance span:first-child{
+    font-size: 18px;
+    color: white;
+    line-height: 40px;
+}
+.balance span:last-child{
+    font-size: 24px;
+    color: white;
+}
+
+.withdrawal,.recharge{
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+.recharge_view{
+    border-right: 0.5px solid #f8f7f7;
+}
+
+.recharge_view,.withdrawal_view{
+    display: flex;
+    width: 100%;
+    height: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.recharge_view span,.withdrawal_view span{
+    color: white;
+    font-size: 18px;
+}

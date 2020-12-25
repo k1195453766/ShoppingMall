@@ -1,355 +1,133 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<title>绑定手机号</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-
-	<link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
-
-	<style>
-		body {
-			margin: 0;
-			overflow: hidden;
-			background: linear-gradient(to bottom, #19778c, #095f88);
-			background-size: 1400% 300%;
-			animation: dynamics 6s ease infinite;
-			-webkit-animation: dynamics 6s ease infinite;
-			-moz-animation: dynamics 6s ease infinite;
-			font-size: 14px;
-			color: #ffffff;
-			min-height: 700px;
-		}
-
-		/*登录样式*/
-		.main {
-			position: fixed;
-			text-align: center;
-			top: 30px;
-			width: 100%;
-			height: auto;
-			justify-content: center;
-		}
-
-		.login {
-			animation: dynamics 6s ease infinite;
-			-webkit-animation: dynamics 6s ease infinite;
-			-moz-animation: dynamics 6s ease infinite;
-			opacity: 0.9;
-			/* border: solid 1px #13a1fc; */
-			background-size: 1400% 300%;
-		}
-
-		@keyframes dynamics {
-			0% {
-				background-position: 0% 0%;
-			}
-
-			50% {
-				background-position: 50% 100%;
-			}
-
-			100% {
-				background-position: 100% 0%;
-			}
-		}
-
-		.log-con {
-			background: linear-gradient(#13a1fc, #13a1fc) left top, linear-gradient(#13a1fc, #13a1fc) left top,
-				linear-gradient(#13a1fc, #13a1fc) right top, linear-gradient(#13a1fc, #13a1fc) right top,
-				linear-gradient(#13a1fc, #13a1fc) left bottom, linear-gradient(#13a1fc, #13a1fc) left bottom,
-				linear-gradient(#13a1fc, #13a1fc) right bottom, linear-gradient(#13a1fc, #13a1fc) right bottom;
-			background-repeat: no-repeat;
-			background-size: 3px 20px, 20px 3px;
-			height: 100%;
-			margin: -2px;
-			padding: 3px 1px 1px 0;
-			border-radius: 3px;
-		}
-
-		.log-con>span {
-			font-size: 30px;
-			font-weight: bold;
-			line-height: 24px;
-			letter-spacing: 2px;
-			display: block;
-			margin: 20px 0 44px 0;
-		}
-
-		.log-con>input {
-			margin-top: 32px;
-			height: 42px;
-			background-color: #ffffff;
-			border-radius: 4px;
-			opacity: 0.9;
-			border: 0;
-			font-size: 16px;
-			outline: none;
-			padding-left: 10px;
-			color: #000000;
-		}
-
-		.log-con>a {
-			margin-top: 20px;
-			height: 44px;
-			background-color: #0090ff;
-			border-radius: 4px;
-			display: block;
-			text-align: center;
-			line-height: 44px;
-			cursor: pointer;
-			opacity: 1;
-		}
-
-		input::-webkit-input-placeholder {
-			color: #000000;
-			font-size: 16px;
-		}
-
-		.log-con>.code {
-			display: inline-block;
-		}
-
-		.log-con>#code {
-			margin-top: 10px;
-			margin-left: 14px;
-			cursor: pointer;
-			padding: 0;
-		}
-
-		/*logo*/
-		.logo {
-			width: 168px;
-			height: 75px;
-			position: fixed;
-			left: 150px;
-			top: 26px;
-		}
-
-		.logo>img {
-			max-width: 100%;
-			max-height: 100%;
-		}
-
-		/*版权样式*/
-		.copyright {
-			position: fixed;
-			bottom: 10px;
-			font-size: 16px;
-			display: block;
-			width: 100%;
-			text-align: center;
-		}
-	</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- 引入 WeUI CDN 链接 -->
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="./css/index.css">
+    <title>首页</title>
 </head>
 
 <body>
+    <div class="container" id="container">
+        <div class="page tabbar js_show">
+            <div class="page__bd" style="height: 100%;">
+                <div class="weui-tab">
+                    <div class="weui-tab__panel">
+                        <div class="tab0" style="display: block;"></div>
+                        <div class="tab1" style="display: none;"></div>
+                        <div class="tab2" style="display: none;"></div>
+                        <div class="tab3" style="display: none;"></div>
+                    </div>
+                    <div class="weui-tabbar">
+                        <div id="tab0" class="weui-tabbar__item weui-bar__item_on">
+                            <img src="./images/tab/tab0_p.png" alt="" class="weui-tabbar__icon">
+                            <p class="weui-tabbar__label">首页</p>
+                        </div>
+                        <div id="tab1" class="weui-tabbar__item">
+                            <img src="./images/tab/tab1.png" alt="" class="weui-tabbar__icon">
+                            <p class="weui-tabbar__label">资料库</p>
+                        </div>
+                        <div id="tab2" class="weui-tabbar__item">
+                            <img src="./images/tab/tab2.png" alt="" class="weui-tabbar__icon">
+                            <p class="weui-tabbar__label">购物车</p>
+                        </div>
+                        <div id="tab3" class="weui-tabbar__item">
+                            <img src="./images/tab/tab3.png" alt="" class="weui-tabbar__icon">
+                            <p class="weui-tabbar__label">个人中心</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-	<div class="main">
-		<div class="login">
-			<div class="log-con">
-				<span>绑定手机号</span>
-				<input type="text" class="name" placeholder="请输入手机号">
-				<input type="password" class="password" placeholder="请输入初始密码">
-				<input type="text" class="code" placeholder="请输入验证码">
-				<input type="button" id="code" onclick="getCode()" value="获取验证码">
-				<a onclick="bindPhone()">立即绑定</a>
-			</div>
-		</div>
-	</div>
+    </div>
 
-	<div class="page__bd page__bd_spacing">
-		<a href="javascript:" style="display: none;" class="weui-btn weui-btn_default" id="showTextToast">文字提示</a>
-	</div>
+    <div class="weui-msg" style="display: none;height: 100%;">
+        <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+        <div class="weui-msg__text-area">
+            <h2 class="weui-msg__title">操作失败</h2>
+            <p class="weui-msg__desc">请在微信客户端打开</p>
+        </div>
+    </div>
 
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/three.min.js"></script>
-	<script type="text/javascript">
-
-		var SEPARATION = 100, AMOUNTX = 60, AMOUNTY = 40;
-		var container;
-		var camera, scene, renderer;
-		var particles, particle, count = 0;
-		var mouseX = 0, mouseY = 0;
-		var windowHalfX = window.innerWidth / 2;
-		var windowHalfY = window.innerHeight / 2;
-
-		$(function () {
-			init();		//初始化
-			animate();	//动画效果
-			wx_init()
-		});
-
-		//初始化
-		function init() {
-			container = document.createElement('div');	//创建容器
-			document.body.appendChild(container);			//将容器添加到页面上
-			camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 1500);		//创建透视相机设置相机角度大小等
-			camera.position.set(0, 450, 2000);		//设置相机位置
-
-			scene = new THREE.Scene();			//创建场景
-			particles = new Array();
-
-			var PI2 = Math.PI * 2;
-			//设置粒子的大小，颜色位置等
-			var material = new THREE.ParticleCanvasMaterial({
-				color: 0x0f96ff,
-				vertexColors: true,
-				size: 4,
-				program: function (context) {
-					context.beginPath();
-					context.arc(0, 0, 0.01, 0, PI2, true);	//画一个圆形。此处可修改大小。
-					context.fill();
-				}
-			});
-			//设置长条粒子的大小颜色长度等
-			var materialY = new THREE.ParticleCanvasMaterial({
-				color: 0xffffff,
-				vertexColors: true,
-				size: 1,
-				program: function (context) {
-
-					context.beginPath();
-					//绘制渐变色的矩形
-					var lGrd = context.createLinearGradient(-0.008, 0.25, 0.016, -0.25);
-					lGrd.addColorStop(0, '#16eff7');
-					lGrd.addColorStop(1, '#0090ff');
-					context.fillStyle = lGrd;
-					context.fillRect(-0.008, 0.25, 0.016, -0.25);  //注意此处的坐标大小
-					//绘制底部和顶部圆圈
-					context.fillStyle = "#0090ff";
-					context.arc(0, 0, 0.008, 0, PI2, true);    //绘制底部圆圈
-					context.fillStyle = "#16eff7";
-					context.arc(0, 0.25, 0.008, 0, PI2, true);    //绘制顶部圆圈
-					context.fill();
-					context.closePath();
-					//绘制顶部渐变色光圈
-					var rGrd = context.createRadialGradient(0, 0.25, 0, 0, 0.25, 0.025);
-					rGrd.addColorStop(0, 'transparent');
-					rGrd.addColorStop(1, '#16eff7');
-					context.fillStyle = rGrd;
-					context.arc(0, 0.25, 0.025, 0, PI2, true);    //绘制一个圆圈
-					context.fill();
-
-				}
-			});
-
-			//循环判断创建随机数选择创建粒子或者粒子条
-			var i = 0;
-			for (var ix = 0; ix < AMOUNTX; ix++) {
-				for (var iy = 0; iy < AMOUNTY; iy++) {
-					var num = Math.random() - 0.1;
-					if (num > 0) {
-						particle = particles[i++] = new THREE.Particle(material);
-					}
-					else {
-						particle = particles[i++] = new THREE.Particle(materialY);
-					}
-					//particle = particles[ i ++ ] = new THREE.Particle( material );
-					particle.position.x = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2);
-					particle.position.z = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2);
-					scene.add(particle);
-				}
-			}
-
-			renderer = new THREE.CanvasRenderer();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-			container.appendChild(renderer.domElement);
-			window.addEventListener('resize', onWindowResize, false);
-		}
-
-		//浏览器大小改变时重新渲染
-		function onWindowResize() {
-			windowHalfX = window.innerWidth / 2;
-			windowHalfY = window.innerHeight / 2;
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-		}
-
-		function animate() {
-			requestAnimationFrame(animate);
-			render();
-		}
-
-		//将相机和场景渲染到页面上
-		function render() {
-			var i = 0;
-			//更新粒子的位置和大小
-			for (var ix = 0; ix < AMOUNTX; ix++) {
-				for (var iy = 0; iy < AMOUNTY; iy++) {
-					particle = particles[i++];
-					//更新粒子位置
-					particle.position.y = (Math.sin((ix + count) * 0.3) * 50) + (Math.sin((iy + count) * 0.5) * 50);
-					//更新粒子大小
-					particle.scale.x = particle.scale.y = particle.scale.z = ((Math.sin((ix + count) * 0.3) + 1) * 4 + (Math.sin((iy + count) * 0.5) + 1) * 4) * 50;	//正常情况下再放大100倍*1200
-				}
-			}
-			renderer.render(scene, camera);
-			count += 0.1;
-		}
-
-		var wx_code = ''
-		function wx_init() {
-			$.ajax({
-				url: 'http://interface.sidama.work/blog/getWxCode',
-				type: 'get',
-				dataType: 'json',
-				success: function (data) {
-					console.log(data);
-					let a = window.location.search.substring(1).split('&')[1].split('=')[1];
-					wx_code = a
-					console.log('code', a);
-					get_openid(wx_code)
-				},
-				error: function (msg) {
-					console.log(msg);
-					let a = window.location.search.substring(1).split('&')[1].split('=')[1];
-					wx_code = a
-					console.log('code', a);
-					get_openid(wx_code)
-				}
-			})
-		}
-
-		function get_token() {
-			$.ajax({
-				url: 'http://interface.sidama.work/blog/getWxToken',
-				type: 'get',
-				dataType: 'json',
-				success: function (data) {
-					console.log(data);
-					let a = window.location.search.substring(1).split('&')[1].split('=')[1];
-					wx_code = a
-					console.log('code', a);
-					get_openid(wx_code)
-				},
-				error: function (msg) {
-					console.log(msg);
-					let a = window.location.search.substring(1).split('&')[1];
-					wx_code = a
-					console.log('code', a);
-					get_openid(wx_code)
-				}
-			})
-		}
-
-		// 获取验证码
-		function getCode() {
-			var $textToast = $('#showTextToast');
-			$textToast.fadeIn();
-			setTimeout(function () {
-				$textToast.fadeOut();
-			}, 2000);
-		}
-		// 绑定手机号
-		function bindPhone() {
-			window.location.href = './home.html?tab=tab0'
-		}
-	</script>
 </body>
+<script src="./js/jquery.min.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script type="text/javascript" src="./js/template.js"></script>
+<script src="./js/api.js"></script>
+<script type="text/javascript" class="tabbar js_show">
+    $(function () {
+        if (!isWeiXin()) {
+            //document.write('请在微信客户端打开应用')
+            // $('.weui-msg').css('display', 'block').siblings().css('display', 'none')
+        }
+        // 获取网页地址参数
+        //var param = window.location.search.substring(1).split('&')[0].split('=')[1];
+        var param = window.location.search.substring(1).split('&')[1].split('=')[1];
+        var token = window.location.search.substring(1).split('&')[0].split('=')[1]
+        localStorage.setItem('token', token)
+        init(param);
+        var currTab = param
+        var title = ['首页', '资料库', '购物车', '个人中心'];
+        $('.weui-tabbar__item').on('click', function () {
+            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+
+            var classTab = $(this).attr('id')
+            if (currTab == classTab) {
+                return;
+            } else {
+                $('.' + classTab).css('display', 'block').siblings().css('display', 'none')
+            }
+
+            var curr = $(this).index();
+            $(document).attr('title', title[curr]);
+            $('.weui-tabbar__item').each(function (index, element) {
+                if (index == curr) {
+                    $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '_p.png');
+                    $('.tab' + index).load("./tab/tab" + index + ".html")
+                    var url_p = window.location.origin + window.location.pathname + '?text=' + token + '&tab=tab' + index
+                    window.history.pushState(null, null, url_p)
+                } else {
+                    $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '.png');
+                }
+            });
+
+            currTab = classTab;
+        });
+    });
+
+    // 初始化页面
+    function init(param) {
+        token = window.location.search.substring(1).split('&')[0].split('=')[1]
+        $("." + param).load("./tab/" + param + ".html")
+        $('#' + param).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        $('.' + param).css('display', 'block').siblings().css('display', 'none')
+        var i = param.substring(3)
+        $('.weui-tabbar__item').each(function (index, element) {
+            if (index == i) {
+                $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '_p.png');
+                $('.tab' + index).load("./tab/tab" + index + ".html")
+                var url_p = window.location.origin + window.location.pathname + '?text=' + token + '&tab=tab' + index
+                window.history.pushState(null, null, url_p)
+            } else {
+                $(element).find('img').eq(0).attr('src', './images/tab/tab' + index + '.png');
+            }
+        });
+    }
+
+    // 判断是否微信打开
+    function isWeiXin() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
 
 </html>

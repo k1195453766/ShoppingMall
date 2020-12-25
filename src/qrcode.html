@@ -1,0 +1,50 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../css/public.css">
+
+    <title>推广二维码</title>
+    <style>
+        .qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>推广二维码</strong>
+        </div>
+
+        <div class="qrcode">
+            <div id="qrcode" style="width:200px; height:200px;margin-top: 50%;"></div>
+        </div>
+    </div>
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/qrcode.min.js"></script>
+<script>
+
+    var userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    var qrcode = new QRCode("qrcode", {
+        text: "https://www.sidama.work/user/getCode?parentId=" + userInfo.userId,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+</script>
+
+</html>

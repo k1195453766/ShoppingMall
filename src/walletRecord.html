@@ -1,0 +1,135 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+    <style>
+        .team_list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team_item {
+            width: 100%;
+            height: 60px;
+            background: white;
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .team_item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            margin-right: 5px;
+        }
+    </style>
+
+    <title>钱包记录</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>钱包记录</strong>
+        </div>
+
+        <div id="app">
+
+        </div>
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        name: '钱包记录',
+        data: {
+            record: []
+        },
+        created() {
+            console.log('created');
+            var typeId = window.location.search.substring(1).split('=')[1]
+            //this.initTitle(typeId)
+            var token = localStorage.getItem('token');
+            //this.getRecord(token)
+        },
+        mounted() {
+            console.log('mounted');
+            var typeId = window.location.search.substring(1).split('=')[1]
+            this.initTitle(typeId)
+        },
+        methods: {
+            initTitle(typeId) {
+                switch (typeId) {
+                    case 1:
+                        document.title = "账号明细"
+                        $('.header>strong').text("账号明细")
+                        break;
+                    case 2:
+                        document.title = "提现记录"
+                        $('.header>strong').text("提现记录")
+                        break;
+                    case 3:
+                        document.title = "发放记录"
+                        $('.header>strong').text("发放记录")
+                        break;
+                    case 4:
+                        document.title = "充值记录"
+                        $('.header>strong').text("充值记录")
+                        break;
+                    default:
+                        break;
+                }
+            },
+            getRecord(token) {
+                return;
+                $.ajax({
+                    url: api.team + "?current=1&size=10",
+                    type: 'post',
+                    headers: {
+                        'Authorization': token
+                    },
+                    body: {
+                        "current": 1,
+                        "size": 10
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log('team', data);
+                        if (data.code == 200 && data.data.length > 0) {
+                            this.teams = data.data
+                        } else {
+                            showToast(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+
+
+                this.teams = [
+                    { id: 1, name: 'xiaosong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' },
+                    { id: 2, name: 'xiaohong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' }
+                ]
+            }
+        }
+    })
+</script>
+
+
+
+</html>

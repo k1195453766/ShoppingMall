@@ -49,6 +49,15 @@
             padding: 0;
         }
 
+        .weui-flex {
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .weui-flex a {
+            width: 25%;
+        }
+
         .top_info {
             width: 100%;
             height: 50%;
@@ -91,6 +100,11 @@
 
         .placeholder img {
             width: 80%;
+        }
+
+        .placeholder p {
+            color: #333;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -140,47 +154,63 @@
 
         <div class="team">
             <div class="weui-flex">
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team.png" alt="">
-                        <p>我的团队</p>
+                <a href="./src/team.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/team.png" alt="">
+                            <p>我的团队</p>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team3.png" alt="">
-                        <p>推广二维码</p>
+                </a>
+                <a href="./src/qrcode.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/qrcode.png" alt="">
+                            <p>推广二维码</p>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team2.png" alt="">
-                        <p>钱包</p>
+                </a>
+                <a href="./src/wallet.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/wallet.png" alt="">
+                            <p>钱包</p>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team3.png" alt="">
-                        <p>收获地址</p>
+                </a>
+                <a href="./src/address.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/address.png" alt="">
+                            <p>收获地址</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="weui-flex">
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team.png" alt="">
-                        <p>银行卡信息</p>
+                <a href="./src/bankcode.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/bankcode.png" alt="">
+                            <p>银行卡信息</p>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-flex__item">
-                    <div class="placeholder">
-                        <img src="./images/my/team3.png" alt="">
-                        <p>个人身份信息</p>
+                </a>
+                <a href="./src/personal.html">
+                    <div class="weui-flex__item">
+                        <div class="placeholder">
+                            <img src="./images/my/personal.png" alt="">
+                            <p>个人身份信息</p>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-flex__item"></div>
-                <div class="weui-flex__item"></div>
+                </a>
+                <a href="#">
+                    <div class="weui-flex__item"></div>
+                </a>
+                <a href="#">
+                    <div class="weui-flex__item"></div>
+                </a>
             </div>
         </div>
 
@@ -191,7 +221,40 @@
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
 <script>
-    //alert('1234555677')
+    var token = localStorage.getItem('token')
+    var userInfo = localStorage.getItem('userInfo');
+    userInfo = JSON.parse(userInfo);
+    console.log('userinfo', userInfo);
+    if (userInfo == null) {
+        getUserInfo()
+    } else {
+        $('.top_info span').text(userInfo.nickName)
+        $('.avatar img').attr('src', userInfo.headImgUrl)
+    }
+
+    function getUserInfo() {
+        $.ajax({
+            url: api.userInfo,
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'Authorization': token
+            },
+            contentType: "application/json;charset=utf-8",//这个参数也是header参数
+            success: function (data) {
+                console.log('getUserInfo');
+                if (data.code == 200) {
+                    localStorage.setItem('userInfo', JSON.stringify(data.data))
+                    userInfo = data.data;
+                    $('.top_info span').text(data.data.nickName)
+                    $('.avatar img').attr('src', data.data.headImgUrl)
+                }
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
 </script>
 
 

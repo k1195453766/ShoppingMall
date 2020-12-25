@@ -1,0 +1,209 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+
+    <title>银行卡信息</title>
+    <style>
+        .weui-label span,
+        .weui-textarea-counter span {
+            color: red;
+        }
+
+        .weui-form__opr-area {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>银行卡信息</strong>
+        </div>
+
+        <div id="app">
+            <div class="weui-cell weui-cell_active weui-cell_readonly">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>账号:</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" :value="account" readonly />
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_active weui-cell_readonly">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>名称:</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" :value="username" readonly />
+                </div>
+            </div>
+
+
+            <div class="weui-cell weui-cell_active weui-cell_access weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>开户行</label></div>
+                <div v-if="isSave==false" class="weui-cell__bd" @click="showPicker" id="showPicker">{{bankname}}</div>
+                <div v-else class="weui-cell__bd" id="showPicker">{{bankname}}</div>
+            </div>
+            <div class="weui-cell weui-cell_active" id="js_cell">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>卡号:</label></div>
+                <div class="weui-cell__bd weui-flex">
+                    <input v-if="isSave==false" id="js_input" class="weui-input" v-model="bankcode" autofocus
+                        type="text" pattern="[0-9]*" placeholder="请输入新的卡号" />
+                    <input v-else class="weui-input" :value="bankcode" type="text" pattern="[0-9]*" readonly />
+                    <button id="js_input_clear" class="weui-btn_reset weui-btn_icon weui-btn_input-clear">
+                        <i class="weui-icon-clear"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_active" id="js_cell">
+                <div class="weui-cell__hd"><label class="weui-label"><span>*</span>持卡人:</label></div>
+                <div class="weui-cell__bd weui-flex">
+                    <input v-if="isSave==false" id="js_input" class="weui-input" v-model="bank_username" autofocus
+                        type="text" pattern="[0-9]*" placeholder="请输入持卡人" />
+                    <input v-else class="weui-input" :value="bank_username" readonly type="text" />
+                    <button id="js_input_clear" class="weui-btn_reset weui-btn_icon weui-btn_input-clear">
+                        <i class="weui-icon-clear"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="weui-textarea-counter"><span>注意：您只有一次修改机会</span></div>
+
+            <div class="weui-form__opr-area">
+                <a @click="saveBankInfo" class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips">确定</a>
+            </div>
+
+            <div class="weui-form__opr-area">
+                <a @click="cancle" href="javascript:" class="weui-btn weui-btn_warn">取消</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../js/weui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/api.js"></script>
+<script>
+    // import weui from '../js/weui.js'
+    console.log(this);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            bankname: '支付宝',
+            account: null,
+            username: null,
+            bankcode: null,
+            bank_username: null,
+            isSave: false,
+            token: localStorage.getItem('token')
+        },
+        created() {
+            var userInfo = userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            this.account = userInfo.userId;
+            this.username = userInfo.nickName;
+            this.getBankInfo();
+        },
+        methods: {
+            getBankInfo() {
+                console.log('getBankInfo');
+                that = this;
+                $.ajax({
+                    url: api.bankInfo,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    success: function (data) {
+                        console.log('bankInfo', data);
+                        if (data.code == 200) {
+                            that.account = data.data.id
+                            that.username = data.data.name
+                            that.bankcode = data.data.bankAccount
+                            that.bank_username = data.data.cardHolder
+                            that.bankname = data.data.bank == null ? '支付宝' : data.data.bank
+                            that.isSave = data.data.bankAccount == null ? false : true
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+            // 保存银行卡信息
+            saveBankInfo() {
+                that = this;
+                $.ajax({
+                    url: api.saveBankInfo,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({ "bank": this.bankname, "bankAccount": this.bankcode, "cardHolder": this.bank_username, "id": this.account, "name": this.username }),
+                    success: function (data) {
+                        console.log('saveBankInfo', data);
+                        if (data.code == 200) {
+                            that.getBankInfo()
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            showPicker() {
+                console.log(this);
+                var that = this;
+                weui.picker([{
+                    label: '支付宝',
+                    value: 0
+                }, {
+                    label: '中国工商银行',
+                    value: 1
+                }, {
+                    label: '中国农业银行',
+                    value: 2
+                }, {
+                    label: '中国建设银行',
+                    disabled: true,
+                    value: 3
+                }, {
+                    label: '招商银行',
+                    value: 4
+                }], {
+                    onChange(result) {
+                        console.log(result);
+                        //that.bank = result[0].label
+
+                    },
+                    onConfirm(result) {
+                        console.log(result);
+                        that.bankname = result[0].label
+                    },
+                    title: '开户行'
+                });
+            },
+            cancle() {
+                window.history.back(-1)
+            }
+
+
+        }
+    })
+</script>
+
+</html>
