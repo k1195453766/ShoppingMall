@@ -4,31 +4,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/order.css">
     <title>订单</title>
-    <style>
-
-    </style>
 </head>
 
 <body>
-    <div id="app">
-        
+    <div class="header">
+        <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png" alt=""></a>
+        </div>
+        <strong>收货地址</strong>
     </div>
+    <div id="app">
+        <div class="default_address">
+            <div class="noDefaultAddress" v-if="defaultAddress.length==0">
+                <div @click="addAddress" class="addAddress">
+                    <span>请添加地址</span>
+                </div>
+            </div>
+            <div v-else class="address">
+                <span>{{defaultAddress.receiveName}} {{defaultAddress.receivePhone}}</span>
+                <span>{{defaultAddress.addrInfo}}</span>
+            </div>
+        </div>
 
+        <div class="distribution" @click="showPicker">
+            <div class="weui-cell weui-cell_active weui-cell_access weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd"><label class="weui-label">配送方式 <span class="required">必填</span></label></div>
+                <div class="weui-cell__bd" id="showPicker">{{distribution}}</div>
+            </div>
+        </div>
+
+        <div class="payMethod">
+            <!-- <strong>支付方式</strong>
+            <span class="required">必填</span> -->
+            <div class="weui-cell weui-cell_active weui-cell_access weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd"><label class="weui-label">支付方式 <span class="required">必填</span></label></div>
+                <div class="weui-cell__bd"></div>
+            </div>
+
+            <div class="wechat_pay" @click="payType1(0)">
+                <div v-if="payMethod==0">
+                    <input checked disabled type="radio"> 微信支付
+                </div>
+                <div v-else>
+                    <input @click="payType1(0)" disabled type="radio"> 微信支付
+                </div>
+            </div>
+            <div class="balance_pay" @click="payType2(1)">
+                <div v-if="payMethod==1">
+                    <input checked disabled type="radio"> 余额支付
+                </div>
+                <div v-else>
+                    <input @click="payType2(1)" disabled type="radio"> 余额支付
+                </div>
+            </div>
+        </div>
+
+        <div class="order_message">
+            <div @click="openOrderMessage"
+                class="weui-cell weui-cell_active weui-cell_access weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd"><label class="weui-label">订单留言</label></div>
+                <div class="weui-cell__bd"></div>
+            </div>
+            <div class="message">
+                <!-- <input type="text" v-model="orderMessage"> -->
+                <textarea class="weui-textarea input_address" v-model="orderMessage" placeholder="请输入您的留言"
+                    rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="shop_list">
+            <div class="weui-cell weui-cell_active weui-cell_access weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd"><label class="weui-label">商品列表</label></div>
+            </div>
+
+            <div class="shop_list_item">
+                <div class="shop_item_left">
+                    <span class="title">{{title}}</span>
+                </div>
+                <div class="shop_item_right">
+                    <span>x<span class="num">{{num}}</span></span>
+                    <span>￥{{amount}}元</span>
+                </div>
+            </div>
+
+            <div class="shop_count">
+                <span>商品总价:<span class="span_color">￥{{amount}}元</span></span>
+                <span>商品优惠:<span class="span_color">￥0元</span></span>
+                <span>应付款金额:<span class="span_color">￥{{amount}}元</span></span>
+            </div>
+        </div>
+
+
+        <div class="makeBuy" @click="makeBuy">
+            <span>确认购买</span>
+        </div>
+    </div>
 </body>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
 <script src="../js/api.js"></script>
 <script src="../js/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/weui.js"></script>
+<script src="../js/getQueryString.js"></script>
+<script src="../js/toast.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
         name: '订单详情',
         data: {
+            token: localStorage.getItem('token'),
+            defaultAddress: '',//默认地址
+            distribution: '', //配送方式
+            payMethod: 0,//支付方式 0:微信；1：余额
+            orderMessage: '',//订单留言
+            openMessage: false,
+
+            amount: 0,
+            title: '',
+            num: 0,
+            newList: [],//购物车进来的商品列表
+
+            goodsId: '',
+            price: '',
+            sku: '',
         },
         created() {
-            console.log('created');
+            if (GetQueryString('type') == 1) {
+                this.initData();
+            } else {
+                this.initDataList()
+            }
+
+            this.getDefaultAddress()
         },
+        methods: {
+            // 初始化订单数据
+            initData() {
+                var goodsId = GetQueryString('shopId')
+                var goodsName = GetQueryString('shopName')
+                var num = GetQueryString('num')
+                var price = GetQueryString('price')
+                var sku = GetQueryString('sku')
+                var amount = GetQueryString('amount')
+
+                this.amount = amount;
+                this.num = num;
+                this.title = goodsName;
+
+                this.goodsId = goodsId;
+                this.price = price;
+                this.sku = sku;
+            },
+
+            initDataList() {
+                var newList = JSON.parse(localStorage.getItem('orderList'))
+                var all_num = GetQueryString('all_num')
+                var all_amount = GetQueryString('all_amount')
+                var all_title = GetQueryString('all_title')
+
+                this.amount = all_amount;
+                this.num = all_num;
+                this.title = all_title + '等' + all_num + '件商品';
+                this.newList = JSON.parse(localStorage.getItem('orderList'))
+            },
+            // 获取默认地址
+            getDefaultAddress() {
+                that = this;
+                $.ajax({
+                    url: api.defaultAddress,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    success: function (data) {
+                        if (data.code == 200 && data.data != null) {
+                            that.defaultAddress = data.data
+                        } else {
+                            that.defaultAddress = []
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            addAddress() {
+                window.location.href = "./address.html"
+            },
+            showPicker() {
+                that = this;
+                weui.picker([{
+                    label: '中通快递[￥0元]',
+                    value: 0
+                }, {
+                    label: '自提[免邮费]',
+                    value: 1
+                },], {
+                    onChange: function (result) {
+                        $('#weui-picker-confirm').text('确定')
+                    },
+                    onConfirm: function (result) {
+                        that.distribution = result[0].label
+                    },
+                    title: '配送方式选择'
+                });
+            },
+
+
+            payType1(i) {
+                this.payMethod = i
+            },
+
+            payType2(i) {
+                this.payMethod = i
+            },
+
+            openOrderMessage() {
+                if (this.openMessage == false) {
+                    $('.message').css('height', '80px')
+                    this.openMessage = true;
+                } else {
+                    $('.message').css('height', '0')
+                    this.openMessage = false;
+                }
+            },
+
+            makeBuy() {
+                if (this.defaultAddress.length == 0) {
+                    showToast('请选择配送地址')
+                    return;
+                }
+
+                if (this.distribution.length == 0) {
+                    showToast("请选择配送方式");
+                    return;
+                }
+
+                if (typeof WeixinJSBridge == "undefined") {
+                    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d97d89ec23acdf7&redirect_uri=xxx&response_type=code&scope=snsapi_base&state=hyxt#wechat_redirect';
+                } else {
+                    this.toPay();
+                }
+            },
+
+            toPay() {
+                //创建订单
+                this.createOrder()
+            },
+
+            createOrder() {
+                that = this;
+                $.ajax({
+                    url: api.addOrder,
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    contentType: "application/json",//这个参数也是header参数
+                    data: GetQueryString('type') == 1 ? JSON.stringify({
+                        "addrInfo": this.defaultAddress.addrInfo, "addressId": 1, "orderDetailsList": [{
+                            "amount": this.amount, 'goodsId': this.goodsId, "goodsName": this.title, "num": this.num, "price": this.price,
+                            "sku": this.sku
+                        }]
+                    }) : JSON.stringify({
+                        "addrInfo": this.defaultAddress.addrInfo, "addressId": 1, "orderDetailsList": this.newList
+                    }),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            that.goBuy(data.data)
+                        } else {
+                            showToast(data.msg);
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+
+            goBuy(orderId) {
+                // 十位时间戳
+                var curr_time = Date.parse(new Date()).toString();
+                curr_time = curr_time.substr(0, 10);
+
+                // 下单生成随机字符串
+                $.ajax({
+                    url: api.orderNonceStr + '?orderNo=' + orderId,
+                    type: 'get',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            that.createSign(orderId, data.data)
+                        } else {
+                            showToast(data.msg);
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            createSign(orderId, payData) {
+                if (this.payMethod == 0) {
+                    // 微信支付
+                    WeixinJSBridge.invoke(
+                        'getBrandWCPayRequest', {
+                        "appId": payData.appId,     //公众号名称，由商户传入
+                        "timeStamp": payData.timeStamp,         //时间戳，自1970年以来的秒数
+                        "nonceStr": payData.nonceStr, //随机串     
+                        "package": payData.package,
+                        "signType": payData.signType,         //微信签名方式
+                        "paySign": payData.paySign //微信签名
+                    },
+                        function (res) {
+                            if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                // 使用以上方式判断前端返回,微信团队郑重提示：
+                                //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                //alert('支付成功')
+                                showToast('支付成功')
+                                that.updateOrder(orderId);
+                            } else {
+                                window.location.href = './orderList.html'
+                            }
+                        });
+                } else {
+                    // 积分支付
+                    that = this;
+                    $.ajax({
+                        url: api.getBalance,
+                        type: 'get',
+                        headers: {
+                            'Authorization': this.token
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code == 200) {
+                                if (parseFloat(data.data) < parseFloat(that.amount)) {
+                                    showToast('积分不足，请更换支付方式或者请先充值')
+                                } else {
+                                    that.payIntegral()
+                                }
+                            } else {
+                                alert(data.msg)
+                            }
+                        },
+                        error: function (msg) {
+                            console.log(msg);
+                        }
+                    })
+                }
+            },
+
+            // 积分支付
+            payIntegral() {
+
+            },
+
+            updateOrder(orderId) {
+                $.ajax({
+                    url: api.updateOrder,
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    contentType: "application/json",//这个参数也是header参数
+                    data: JSON.stringify({
+                        "orderNo": orderId, "status": 5,
+                    }),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            window.location.href = './orderList.html'
+                        } else {
+                            showToast(data.msg);
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            pay() {
+
+            }
+
+
+        },
+
 
     })
 </script>

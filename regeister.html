@@ -410,8 +410,6 @@
 				data: JSON.stringify({ "phone": phone, "type": 3, "userName": userName, "password": password, }),
 				dataType: 'json',
 				success: function (data) {
-					// console.log(data);
-					showToast(data.code)
 					if (data.code == 200) {
 						window.location.href = 'https://www.sidama.work/user/getCode?tab=tab0'
 					} else {

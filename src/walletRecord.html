@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
     <link rel="stylesheet" href="../css/public.css">
     <style>
+        #app {
+            display: flex;
+            flex-direction: column;
+        }
+
         .team_list {
             display: flex;
             flex-direction: column;
@@ -30,6 +35,60 @@
             border-radius: 25px;
             margin-right: 5px;
         }
+
+        .tab {
+            display: flex;
+            flex-direction: row;
+            height: 40px;
+            width: 100%;
+            position: fixed;
+            background: white;
+        }
+
+        .tab_item {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tab_item:first {
+            width: 80px;
+        }
+
+        .tab_item:last-child {
+            width: 60px;
+        }
+
+        .tab_item span {
+            font-size: 14px;
+            color: #333333;
+        }
+
+        .list {
+            height: 40px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            margin-top: 5px;
+            background: white;
+        }
+
+        .list .list_item {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            margin-top: 40px;
+        }
+
+        .list_item span {
+            font-size: 8px;
+            color: #333333
+        }
     </style>
 
     <title>钱包记录</title>
@@ -44,7 +103,31 @@
         </div>
 
         <div id="app">
-
+            <div class="tab">
+                <div class="tab_item">
+                    <span>时间</span>
+                </div>
+                <div class="tab_item">
+                    <span>类型</span>
+                </div>
+                <div class="tab_item">
+                    <span>金额</span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="noList" v-if="record.length==0"></div>
+                <div class="list" v-else v-for="(item , i) in record">
+                    <div class="list_item">
+                        <span>{{item.createTime}}</span>
+                    </div>
+                    <div class="list_item">
+                        <span>{{item.type==1?'充值':item.type==2?'提现':''}}</span>
+                    </div>
+                    <div class="list_item">
+                        <span>{{item.amount}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -52,65 +135,73 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/api.js"></script>
+<script src="../js/getQueryString.js"></script>
+<script src="../js/toast.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
         name: '钱包记录',
         data: {
-            record: []
+            record: [],
+            token: localStorage.getItem('token'),
+            type: GetQueryString('type')
         },
         created() {
-            console.log('created');
-            var typeId = window.location.search.substring(1).split('=')[1]
-            //this.initTitle(typeId)
-            var token = localStorage.getItem('token');
-            //this.getRecord(token)
+
+            console.log('type=', GetQueryString('type'));
+            this.initTitle(GetQueryString('type'))
+            this.getList(GetQueryString('type'))
         },
         mounted() {
-            console.log('mounted');
-            var typeId = window.location.search.substring(1).split('=')[1]
-            this.initTitle(typeId)
+
         },
         methods: {
+            // 修改标题
             initTitle(typeId) {
-                switch (typeId) {
-                    case 1:
-                        document.title = "账号明细"
-                        $('.header>strong').text("账号明细")
-                        break;
-                    case 2:
-                        document.title = "提现记录"
-                        $('.header>strong').text("提现记录")
-                        break;
-                    case 3:
-                        document.title = "发放记录"
-                        $('.header>strong').text("发放记录")
-                        break;
-                    case 4:
-                        document.title = "充值记录"
-                        $('.header>strong').text("充值记录")
-                        break;
-                    default:
-                        break;
+                console.log('typeId:', typeId);
+                if (typeId == 1) {
+                    document.title = "账号明细"
+                    $('.header>strong').text("账号明细")
+                } else if (typeId == 2) {
+                    document.title = "提现记录"
+                    $('.header>strong').text("提现记录")
+                } else if (typeId == 3) {
+                    document.title = "发放记录"
+                    $('.header>strong').text("发放记录")
+                } else if (typeId == 4) {
+                    document.title = "充值记录"
+                    $('.header>strong').text("充值记录")
                 }
             },
-            getRecord(token) {
-                return;
+            getList(typeId) {
+                var url = '';
+                if (typeId == 1) {
+                    // 账户明细
+                    url = api.accountDetail
+                } else if (typeId == 2) {
+                    // 提现记录
+                    url = api.withdrawalRecord
+                } else if (typeId == 3) {
+                    // 发放记录
+                    url = api.grantRecord
+                } else if (typeId == 4) {
+                    // 充值记录
+                    url = api.rechargeRecord
+                }
+
+                that = this;
                 $.ajax({
-                    url: api.team + "?current=1&size=10",
+                    url: url,
                     type: 'post',
                     headers: {
-                        'Authorization': token
+                        'Authorization': this.token
                     },
-                    body: {
-                        "current": 1,
-                        "size": 10
-                    },
+                    body: JSON.stringify({}),
                     dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
                     success: function (data) {
-                        console.log('team', data);
-                        if (data.code == 200 && data.data.length > 0) {
-                            this.teams = data.data
+                        if (data.code == 200) {
+                            that.record = data.data == null ? [] : data.data
                         } else {
                             showToast(data.msg)
                         }
@@ -119,13 +210,8 @@
                         console.log(msg);
                     }
                 })
-
-
-                this.teams = [
-                    { id: 1, name: 'xiaosong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' },
-                    { id: 2, name: 'xiaohong', image: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=358336286,2132497338&fm=26&gp=0.jpg' }
-                ]
             }
+
         }
     })
 </script>

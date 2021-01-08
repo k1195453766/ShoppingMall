@@ -60,7 +60,7 @@
                         <div v-if="team.count==0" class="noAgent"></div>
                         <div v-else class="agent">
                             <div class="team_title">
-                                一级代理({{team.count}})
+                                普通会员({{team.count}})
                             </div>
                             <div class="team_item" v-for="(user,index) in team.userInfo">
                                 <img :src=user.headImgUrl alt="" srcset="">
@@ -73,7 +73,7 @@
                         <div v-if="team.count==0" class="noAgent"></div>
                         <div v-else class="agent">
                             <div class="team_title">
-                                二级代理({{team.count}})
+                                一级代理({{team.count}})
                             </div>
                             <div class="team_item" v-for="(user,index) in team.userInfo">
                                 <img :src=user.headImgUrl alt="" srcset="">
@@ -83,6 +83,19 @@
                     </div>
 
                     <div v-else-if="team.level==2" class="agent">
+                        <div v-if="team.count==0" class="noAgent"></div>
+                        <div v-else class="agent">
+                            <div class="team_title">
+                                二级代理({{team.count}})
+                            </div>
+                            <div class="team_item" v-for="(user,index) in team.userInfo">
+                                <img :src=user.headImgUrl alt="" srcset="">
+                                <span>{{user.nickName}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else-if="team.level==3" class="agent">
                         <div v-if="team.count==0" class="noAgent"></div>
                         <div v-else class="agent">
                             <div class="team_title">

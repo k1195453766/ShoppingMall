@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css" />
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/orderList.css">
+    <title>全部订单</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="goBack"><a href="javascript:window.history.go(-1)"><img src="../images/home/back.png"
+                        alt=""></a></div>
+            <strong>订单列表</strong>
+        </div>
+        <div id="app">
+            <div class="page__bd" style="height: 100%;">
+                <div class="weui-tab">
+                    <div class="weui-navbar">
+                        <div type="0" @click="onPressType(0)" class="weui-navbar__item weui-bar__item_on">
+                            全部
+                        </div>
+                        <div type="4" @click="onPressType(4)" class="weui-navbar__item">
+                            待付款
+                        </div>
+                        <div type="5" @click="onPressType(5)" class="weui-navbar__item">
+                            待收货
+                        </div>
+                        <div type="2" @click="onPressType(2)" class="weui-navbar__item">
+                            已完成
+                        </div>
+                    </div>
+                    <div class="weui-tab__panel">
+                        <div v-if="orderList.length==0" class="noOrderList"></div>
+                        <div v-else v-for="(order ,i) in orderList" class="order_item">
+                            <div class="order_state">
+                                <span>订单号:{{order.orderNo}}</span>
+                                <span>{{order.status==4?'待付款':order.status==1?'待收货':order.status==5?'已付款':order.status==2?'订单完成':''}}</span>
+                            </div>
+                            <div class="order_details">
+                                <div class="order_img">
+                                    <img :src="order.orderDetailsList[0].imgPath" alt="" srcset="">
+                                </div>
+                                <div class="order_content">
+                                    <span>{{order.orderDetailsList[0].goodsName}}
+                                        *{{order.orderDetailsList[0].num}}</span>
+                                    <span>{{order.createdTime}}</span>
+                                </div>
+                            </div>
+                            <div @click="delOrder(order.orderNo)" class="del">
+                                <img src="../images/del.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="../js/api.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/weui.js"></script>
+<script src="../js/getQueryString.js"></script>
+<script src="../js/toast.js"></script>
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        name: '订单详情',
+        data: {
+            token: localStorage.getItem('token'),
+            typeId: 0,//类型
+            orderList: [],//全部订单列表
+        },
+        created() {
+            this.initData();
+        },
+        methods: {
+            initData() {
+                that = this;
+                $.ajax({
+                    url: api.orderList,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({}),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            that.orderList = data.data
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+            delOrder(id) {
+                that = this;
+                $.ajax({
+                    url: api.delOrder + '/' + id,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: JSON.stringify({ "orderNo": id }),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            showToast('订单删除成功')
+                            that.initData();
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+
+
+            onPressType(index) {
+                that = this;
+                $.ajax({
+                    url: api.orderList,
+                    type: 'POST',
+                    headers: {
+                        'Authorization': this.token
+                    },
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",//这个参数也是header参数
+                    data: index == 0 ? JSON.stringify({}) : JSON.stringify({ "status": index }),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            that.orderList = data.data
+                        } else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                })
+            },
+        }
+
+    })
+    $(function () {
+        $('.weui-navbar__item').on('click', function () {
+            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+            window.app.typeId = $(this).attr('type')
+        });
+    });
+
+
+</script>
+
+</html>

@@ -193,7 +193,7 @@
                         <img src="{{shop.imgPath}}"
                             alt="" srcset="">
                         <span>{{shop.goodsName}}</span>
-                        <span>￥{{shop.price}}</span>
+                        <span>￥{{shop.saleAmount}}</span>
                     </div>
                     {{ /each }}
                     </script>
@@ -209,6 +209,7 @@
     $(function () {
         initData()
         initSwiper()
+        getUserInfo()
     })
 
     function initSwiper() {
@@ -229,16 +230,36 @@
         // 获取首页数据
         $.ajax({
             url: api.shopList,
-            type: 'POST',
+            type: 'get',
             dataType: 'json',
-            contentType: "application/json;charset=utf-8",//这个参数也是header参数
-            data: JSON.stringify({ "pages": 1, "size": 10 }),
+            //contentType: "application/json;charset=utf-8",//这个参数也是header参数
+            //data: JSON.stringify({ "pages": 1, "size": 10 }),
             success: function (data) {
                 var shopList = {
-                    shops: data.records
+                    shops: data
                 }
                 var html = template("tab0_shop", shopList);
                 $("#shoplist").html(html);
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    function getUserInfo() {
+        $.ajax({
+            url: api.userInfo,
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'Authorization': token
+            },
+            contentType: "application/json;charset=utf-8",//这个参数也是header参数
+            success: function (data) {
+                if (data.code == 200) {
+                    localStorage.setItem('userInfo', JSON.stringify(data.data))
+                }
             },
             error: function (msg) {
                 console.log(msg);
